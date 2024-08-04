@@ -1,9 +1,36 @@
 import { ArrowRight } from '@phosphor-icons/react'
+import { useEffect, useState } from 'react'
 import { LoanForm } from './components/loan-form'
 import PortionTable from './components/portion-table'
 import { Button } from './components/ui/button'
 
+interface LoanValuesType {
+  value: number
+  fee: number
+  adjustedValue: number
+  portion: number
+}
+
 export function App() {
+  const [loanSimulation, setLoanSimulation] = useState<LoanValuesType[]>([])
+
+  useEffect(() => {
+    const newLoan = []
+    for (let i = 60000; i >= 0; i -= 15000) {
+      const adjustedValue = i * 1.01
+
+      newLoan.push({
+        value: i,
+        fee: i * 0.01,
+        adjustedValue,
+        portion: i > 15000 ? 15000 : adjustedValue,
+      })
+      i = adjustedValue
+    }
+    setLoanSimulation(newLoan)
+  }, [])
+
+  console.table(loanSimulation)
   return (
     <div className="max-w-7xl px-6 py-8 mx-auto">
       <h1 className="text-5xl text-muted-foreground py-12 text-center">
