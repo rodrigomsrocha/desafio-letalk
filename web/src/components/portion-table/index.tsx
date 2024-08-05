@@ -8,6 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import { formatCurrency } from '@/lib/utils'
+import { addMonths, format, setDate } from 'date-fns'
 
 interface LoanValuesType {
   value: number
@@ -21,6 +23,13 @@ interface PortionTableProps {
 }
 
 export default function PortionTable({ months }: PortionTableProps) {
+  function getMonth(index: number) {
+    const date = new Date()
+    const currentMonth = addMonths(date, index)
+    const finalDate = setDate(currentMonth, 20)
+    return format(finalDate, 'dd/MM/yy')
+  }
+
   return (
     <Card className="rounded-md">
       <CardHeader className="px-7">
@@ -38,16 +47,20 @@ export default function PortionTable({ months }: PortionTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody className="text-nowrap">
-            {months.map((month) => {
+            {months.map((month, index) => {
               return (
                 <TableRow key={month.value}>
                   <TableCell>
-                    <div className="font-medium">{month.value.toFixed(2)}</div>
+                    <div className="font-medium">
+                      {formatCurrency(month.value)}
+                    </div>
                   </TableCell>
-                  <TableCell>{month.portion.toFixed(2)}</TableCell>
-                  <TableCell>{month.adjustedValue.toFixed(2)}</TableCell>
-                  <TableCell>{month.portion.toFixed(2)}</TableCell>
-                  <TableCell className="text-right">20/09/21</TableCell>
+                  <TableCell>{formatCurrency(month.fee)}</TableCell>
+                  <TableCell>{formatCurrency(month.adjustedValue)}</TableCell>
+                  <TableCell>{formatCurrency(month.portion)}</TableCell>
+                  <TableCell className="text-right">
+                    {getMonth(index)}
+                  </TableCell>
                 </TableRow>
               )
             })}

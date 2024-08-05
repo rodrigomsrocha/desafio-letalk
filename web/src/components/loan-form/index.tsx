@@ -1,9 +1,3 @@
-// import { cn } from '@/lib/utils'
-// import { CalendarIcon } from '@radix-ui/react-icons'
-// import { format } from 'date-fns'
-// import { Calendar } from '../ui/calendar'
-// import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
-// import { useState } from 'react'
 import { FormEvent } from 'react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
@@ -28,8 +22,6 @@ interface LoanFormProps {
 }
 
 export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
-  // const [date, setDate] = useState<Date>()
-
   function onSimulationSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -68,29 +60,6 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
             <SelectItem value="1.1">Espirito Santo</SelectItem>
           </SelectContent>
         </Select>
-        {/* <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={'outline'}
-              className={cn(
-                'w-full justify-start text-left font-normal',
-                !date && 'text-muted-foreground',
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, 'PPP') : <span>DATA DE NASCIMENTO</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              captionLayout="dropdown-buttons"
-              initialFocus
-            />
-          </PopoverContent>
-        </Popover> */}
         <Input name="date-birth" type="text" placeholder="DATA DE NASCIMENTO" />
         <Input
           name="value"
