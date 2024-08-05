@@ -1,28 +1,54 @@
+import { prisma } from "../../lib/prisma";
+
 interface Loan {
-  id: number;
-  amount: number;
-  borrower: string;
+  cpf: string;
+  uf: string;
+  dataNascimento: string;
+  valorEmprestimo: number;
+  valorParcela: number;
+  juros: number;
+  qtdParcelas: number;
 }
 
-let loans: Loan[] = [
-  { id: 1, amount: 1000, borrower: 'John Doe' },
-  { id: 2, amount: 2000, borrower: 'Jane Doe' }
-];
-
-export function getAllLoans() {
-  return loans;
+export async function getAllLoans() {
+  try {
+    const loans = await prisma.loan.findMany();
+    return loans;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
-export function getLoanById(id: number) {
-  return loans.find(loan => loan.id === id);
+export async function getLoanById(id: string) {
+  try {
+    const loan = await prisma.loan.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if(!loan) {
+      return null;
+    }
+
+    return loan
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
-export function createLoan(amount: number, borrower: string) {
-  const newLoan: Loan = {
-    id: loans.length + 1,
-    amount,
-    borrower
-  };
-  loans.push(newLoan);
-  return newLoan;
+export async function createLoan(loan: Loan) {
+  try {
+    const newLoan = await prisma.loan.create({
+      data: {
+        ...loan
+      },
+    });
+    return newLoan;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
