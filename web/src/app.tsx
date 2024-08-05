@@ -28,6 +28,7 @@ export function App() {
   const [totalFee, setTotalFee] = useState(0)
 
   function handleLoanSimulationInformation(data: LoanSimulationFormType) {
+    setTotalFee(0)
     setLoanSimulationInformation(data)
 
     const newLoan = []
@@ -36,7 +37,7 @@ export function App() {
 
       newLoan.push({
         value: i,
-        fee: i * 0.01,
+        fee: i * (data.uf / 100),
         adjustedValue,
         portion: i > data.portion ? data.portion : adjustedValue,
       })
