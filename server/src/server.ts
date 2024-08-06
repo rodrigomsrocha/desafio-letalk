@@ -1,8 +1,12 @@
+import cors from "cors";
 import express from "express";
 import { loansRouter } from "./routes/loans/loans-route";
 
 const app = express();
 
+app.use(cors({
+  origin: '*'
+}))
 
 app.use(express.json());
 
