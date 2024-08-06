@@ -14,7 +14,7 @@ import {
 
 interface LoanSimulationFormType {
   cpf: string
-  uf: number
+  uf: string
   dateBirth: string
   value: number
   portion: number
@@ -54,7 +54,6 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
   function onSimulationSubmit(values: z.infer<typeof formSchema>) {
     const loanSimulationInformation = {
       ...values,
-      uf: Number(values.uf),
     }
 
     handleLoanSimulationInformation(loanSimulationInformation)
@@ -97,10 +96,10 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
                       <SelectValue placeholder="UF" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="1">Minas Gerais</SelectItem>
-                      <SelectItem value="0.8">São Paulo</SelectItem>
-                      <SelectItem value="0.9">Rio de Janeiro</SelectItem>
-                      <SelectItem value="1.1">Espirito Santo</SelectItem>
+                      <SelectItem value="MG">Minas Gerais</SelectItem>
+                      <SelectItem value="SP">São Paulo</SelectItem>
+                      <SelectItem value="RJ">Rio de Janeiro</SelectItem>
+                      <SelectItem value="ES">Espirito Santo</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>

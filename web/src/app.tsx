@@ -1,13 +1,15 @@
-import { ArrowRight } from '@phosphor-icons/react'
+import { ArrowRight, CircleNotch } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { LoanForm } from './components/loan-form'
 import PortionTable from './components/portion-table'
 import { SimulationInfoCards } from './components/simulation-info-cards'
 import { Button } from './components/ui/button'
+import { useToast } from './components/ui/use-toast'
+import { api } from './lib/api'
 
 interface LoanSimulationFormType {
   cpf: string
-  uf: number
+  uf: string
   dateBirth: string
   value: number
   portion: number
@@ -21,23 +23,47 @@ interface LoanValuesType {
 }
 
 export function App() {
+  const { toast } = useToast()
+
   const [loanSimulation, setLoanSimulation] = useState<LoanValuesType[]>([])
   const [loanSimulationInformation, setLoanSimulationInformation] =
     useState<LoanSimulationFormType>()
-  const [simulationFormSubimitted, setSimulationFormSubimitted] = useState(true)
+  const [feePercentage, setFeePercentage] = useState(0)
   const [totalFee, setTotalFee] = useState(0)
+
+  const [loading, setLoading] = useState(false)
 
   function handleLoanSimulationInformation(data: LoanSimulationFormType) {
     setTotalFee(0)
     setLoanSimulationInformation(data)
+    let fee = 0
+
+    switch (data.uf) {
+      case 'MG':
+        fee = 1
+        break
+      case 'SP':
+        fee = 0.8
+        break
+      case 'RJ':
+        fee = 0.9
+        break
+      case 'ES':
+        fee = 1.1
+        break
+
+      default:
+        break
+    }
+    setFeePercentage(fee)
 
     const newLoan = []
     for (let i = data.value; i >= 0; i -= data.portion) {
-      const adjustedValue = i * (1 + data.uf / 100)
+      const adjustedValue = i * (1 + fee / 100)
 
       newLoan.push({
         value: i,
-        fee: i * (data.uf / 100),
+        fee: i * (fee / 100),
         adjustedValue,
         portion: i > data.portion ? data.portion : adjustedValue,
       })
@@ -48,8 +74,41 @@ export function App() {
     newLoan.forEach((portion) => {
       setTotalFee((prev) => (prev += portion.fee))
     })
+  }
 
-    setSimulationFormSubimitted(true)
+  async function handleLoanImplementation() {
+    try {
+      setLoading(true)
+      if (!loanSimulationInformation) {
+        toast({
+          title: 'Algo deu errado!!!',
+          description: 'Preencha o formulário para simular o empréstimo',
+          variant: 'destructive',
+        })
+        return
+      }
+
+      await api.post('/loans', {
+        cpf: loanSimulationInformation.cpf,
+        uf: loanSimulationInformation.uf,
+        dataNascimento: new Date(loanSimulationInformation.dateBirth),
+        valorEmprestimo: loanSimulationInformation.value,
+        valorParcela: loanSimulationInformation.portion,
+        juros: feePercentage,
+        qtdParcelas: loanSimulation.length,
+      })
+      setLoading(false)
+
+      toast({
+        title: 'Sucesso!!!',
+        description: 'Empréstimo efetivado com sucesso',
+      })
+    } catch (error) {
+      toast({
+        title: 'Algo deu errado!!!',
+        variant: 'destructive',
+      })
+    }
   }
 
   return (
@@ -65,13 +124,13 @@ export function App() {
         </div>
         <div className="space-y-6 lg:col-span-2">
           <div className="rounded-md bg-muted/70 shadow-box px-4 py-8 space-y-6">
-            {simulationFormSubimitted && loanSimulationInformation ? (
+            {loanSimulationInformation ? (
               <>
                 <p className="font-bold text-center">
                   Veja a simulação para o seu empréstimo antes de efetivar
                 </p>
                 <SimulationInfoCards
-                  feePercentage={loanSimulationInformation.uf}
+                  feePercentage={feePercentage}
                   loanMonths={loanSimulation.length}
                   loanPortion={loanSimulationInformation.portion}
                   loanValue={loanSimulationInformation.value}
@@ -80,9 +139,22 @@ export function App() {
                 />
                 <div className="space-y-8">
                   <PortionTable months={loanSimulation} />
-                  <Button className="flex items-center gap-2 justify-center w-full">
-                    EFETIVAR O EMPRÉSTIMO
-                    <ArrowRight weight="bold" size={18} />
+                  <Button
+                    disabled={loading}
+                    onClick={handleLoanImplementation}
+                    className="flex items-center gap-2 justify-center w-full"
+                  >
+                    {loading ? (
+                      <>
+                        ISSO PODE DEMORAR UM POUCO
+                        <CircleNotch className="animate-spin" size={18} />
+                      </>
+                    ) : (
+                      <>
+                        EFETIVAR O EMPRÉSTIMO
+                        <ArrowRight size={18} />
+                      </>
+                    )}
                   </Button>
                 </div>
               </>
