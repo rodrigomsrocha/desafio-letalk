@@ -36,7 +36,7 @@ export function App() {
         fee = 0.9
         break
       case 'ES':
-        fee = 1.1
+        fee = 1.11
         break
 
       default:
