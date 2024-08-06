@@ -1,6 +1,7 @@
 import { ArrowRight, CircleNotch } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { LoanForm } from './components/loan-form'
+import { ModeToggle } from './components/mode-toggle'
 import PortionTable from './components/portion-table'
 import { SimulationInfoCards } from './components/simulation-info-cards'
 import { Button } from './components/ui/button'
@@ -113,9 +114,12 @@ export function App() {
 
   return (
     <div className="max-w-7xl px-6 py-8 mx-auto">
-      <h1 className="text-5xl text-muted-foreground py-12 text-center">
-        Simule e solicite seu empréstimo
-      </h1>
+      <header className="flex items-end justify-between py-12 gap-4">
+        <h1 className="text-2xl md:text-4xl text-muted-foreground">
+          Simule e solicite seu empréstimo
+        </h1>
+        <ModeToggle />
+      </header>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="space-y-6">
           <LoanForm
