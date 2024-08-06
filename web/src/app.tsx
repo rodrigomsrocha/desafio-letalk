@@ -7,21 +7,7 @@ import { SimulationInfoCards } from './components/simulation-info-cards'
 import { Button } from './components/ui/button'
 import { useToast } from './components/ui/use-toast'
 import { api } from './lib/api'
-
-interface LoanSimulationFormType {
-  cpf: string
-  uf: string
-  dateBirth: string
-  value: number
-  portion: number
-}
-
-interface LoanValuesType {
-  value: number
-  fee: number
-  adjustedValue: number
-  portion: number
-}
+import { LoanSimulationFormType, LoanValuesType } from './types/loan'
 
 export function App() {
   const { toast } = useToast()

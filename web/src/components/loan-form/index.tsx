@@ -1,3 +1,4 @@
+import { LoanSimulationFormType } from '@/types/loan'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -11,14 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-
-interface LoanSimulationFormType {
-  cpf: string
-  uf: string
-  dateBirth: string
-  value: number
-  portion: number
-}
 
 interface LoanFormProps {
   handleLoanSimulationInformation: (data: LoanSimulationFormType) => void

@@ -9,14 +9,8 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { formatCurrency } from '@/lib/utils'
+import { LoanValuesType } from '@/types/loan'
 import { addMonths, format, setDate } from 'date-fns'
-
-interface LoanValuesType {
-  value: number
-  fee: number
-  adjustedValue: number
-  portion: number
-}
 
 interface PortionTableProps {
   months: LoanValuesType[]
