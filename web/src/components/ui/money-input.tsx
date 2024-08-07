@@ -1,8 +1,8 @@
 import { LoanSimulationFormType } from '@/types/loan'
 import { useReducer } from 'react'
 import { UseFormReturn } from 'react-hook-form'
-import { FormControl, FormField, FormItem, FormMessage } from './ui/form' // Shadcn UI import
-import { Input } from './ui/input' // Shandcn UI Input
+import { FormControl, FormField, FormItem, FormMessage } from './form' // Shadcn UI import
+import { Input } from './input' // Shandcn UI Input
 
 type TextInputProps = {
   form: UseFormReturn<LoanSimulationFormType>

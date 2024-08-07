@@ -3,10 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useHookFormMask } from 'use-mask-input'
 import { z } from 'zod'
-import MoneyInput from '../money-input'
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
+import MoneyInput from '../ui/money-input'
 import {
   Select,
   SelectContent,
