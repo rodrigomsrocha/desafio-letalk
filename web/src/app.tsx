@@ -91,6 +91,7 @@ export function App() {
         description: 'Empréstimo efetivado com sucesso',
       })
     } catch (error) {
+      setLoading(false)
       toast({
         title: 'Algo deu errado!!!',
         variant: 'destructive',
