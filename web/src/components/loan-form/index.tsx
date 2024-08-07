@@ -1,7 +1,9 @@
 import { LoanSimulationFormType } from '@/types/loan'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useHookFormMask } from 'use-mask-input'
 import { z } from 'zod'
+import MoneyInput from '../money-input'
 import { Button } from '../ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '../ui/form'
 import { Input } from '../ui/input'
@@ -21,8 +23,8 @@ const formSchema = z
   .object({
     cpf: z
       .string({ message: 'CPF requerido.' })
-      .min(11, 'CPF Inválido')
-      .max(11, 'CPF Inválido'),
+      .min(14, 'CPF Inválido')
+      .max(14, 'CPF Inválido'),
     uf: z.string({ message: 'UF requerido.' }),
     dateBirth: z.string({ message: 'Data de nascimento requerida.' }).date(),
     value: z.coerce
@@ -43,6 +45,8 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
+
+  const registerWithMask = useHookFormMask(form.register)
 
   function onSimulationSubmit(values: z.infer<typeof formSchema>) {
     const loanSimulationInformation = {
@@ -65,10 +69,16 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
           <FormField
             control={form.control}
             name="cpf"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="CPF" {...field} />
+                  <Input
+                    placeholder="CPF"
+                    {...registerWithMask('cpf', 'cpf', {
+                      showMaskOnHover: false,
+                      showMaskOnFocus: false,
+                    })}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -120,14 +130,13 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
           <FormField
             control={form.control}
             name="value"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    min={0}
-                    type="number"
+                  <MoneyInput
+                    form={form}
+                    name="value"
                     placeholder="QUAL O VALOR DO EMPRÉSTIMO?"
-                    {...field}
                   />
                 </FormControl>
                 <FormMessage />
@@ -137,14 +146,23 @@ export function LoanForm({ handleLoanSimulationInformation }: LoanFormProps) {
           <FormField
             control={form.control}
             name="portion"
-            render={({ field }) => (
+            render={() => (
               <FormItem>
                 <FormControl>
-                  <Input
-                    min={0}
-                    type="number"
+                  {/* <Input
+                    type="text"
                     placeholder="QUAL O VALOR DESEJA PAGAR POR MÊS?"
-                    {...field}
+                    {...registerWithMask('portion', 'decimal', {
+                      rightAlign: false,
+                      unmaskAsNumber: true,
+                      showMaskOnHover: false,
+                      showMaskOnFocus: false,
+                    })}
+                  /> */}
+                  <MoneyInput
+                    form={form}
+                    name="portion"
+                    placeholder="QUAL O VALOR DESEJA PAGAR POR MÊS?"
                   />
                 </FormControl>
                 <FormMessage />
